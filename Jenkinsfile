@@ -31,7 +31,8 @@ pipeline {
             }
             steps {
                 sh '''
-                    echo 'Inside Test'
+                    echo 'Runnnig tests..'
+                    npm test
                 '''
             }
         }
