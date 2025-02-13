@@ -3,8 +3,8 @@ pipeline {
 
     stages {
         stage('Build') {
-            agent{
-                docker{
+            agent {
+                docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
@@ -20,10 +20,11 @@ pipeline {
                     ls -la
                 '''
             }
+        }
 
-            stage('Test') {
-            agent{
-                docker{
+        stage('Test') { 
+            agent {
+                docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
@@ -31,7 +32,6 @@ pipeline {
             steps {
                 sh '''
                     echo 'Inside Test'
-
                 '''
             }
         }
