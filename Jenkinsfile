@@ -12,6 +12,7 @@ pipeline {
             steps {
                 sh '''
                     ls -la
+                    cat build/index.html
                     node --version
                     npm --version
                     npm ci
