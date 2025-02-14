@@ -59,7 +59,7 @@ pipeline {
         always {
             script {
                 try {
-                    junit 'test-results/junit.xml'
+                    junit 'jest-results/junit.xml'
                 } catch (Exception e) {
                     echo 'No test results found, skipping JUnit report.'
                 }
