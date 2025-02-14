@@ -2,6 +2,8 @@ pipeline {
     agent any
 
     stages {
+        /*
+
         stage('Build') {
             agent {
                 docker {
@@ -12,7 +14,6 @@ pipeline {
             steps {
                 sh '''
                     ls -la
-                    cat build/index.html
                     node --version
                     npm --version
                     npm ci
@@ -21,33 +22,37 @@ pipeline {
                 '''
             }
         }
+        */
 
-        stage('Test') { 
+        stage('Test') {
             agent {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
+
             steps {
                 sh '''
-                    echo 'Running tests...'
+                    #test -f build/index.html
                     npm test
                 '''
             }
         }
 
-        stage('e2e tests') { 
+        stage('E2E') {
             agent {
                 docker {
-                    image 'mcr.microsoft.com/playwright:v1.50.1-noble'
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                     reuseNode true
                 }
             }
+
             steps {
                 sh '''
                     npm install serve
-                    node_modules/.bin/serve -s build
+                    node_modules/.bin/serve -s build &
+                    sleep 10
                     npx playwright test
                 '''
             }
@@ -56,13 +61,7 @@ pipeline {
 
     post {
         always {
-            script {
-                try {
-                    junit 'jest-results/junit.xml'
-                } catch (Exception e) {
-                    echo 'No test results found, skipping JUnit report.'
-                }
-            }
+            junit 'jest-results/junit.xml'
         }
     }
 }
