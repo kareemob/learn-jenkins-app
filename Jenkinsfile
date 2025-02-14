@@ -31,13 +31,13 @@ pipeline {
             }
             steps {
                 sh '''
-                    echo 'Runnnig tests..'
+                    echo 'Running tests...'
                     npm test
                 '''
             }
         }
 
-                stage('e2e tests') { 
+        stage('e2e tests') { 
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.50.1-noble'
@@ -47,16 +47,22 @@ pipeline {
             steps {
                 sh '''
                     npm install serve
-                    node_modules\.bin\serve -s build
+                    node_modules/.bin/serve -s build
                     npx playwright test
                 '''
             }
         }
     }
 
-    post{
-        always{
-            junit 'test-results/junit.xml'
+    post {
+        always {
+            script {
+                try {
+                    junit 'test-results/junit.xml'
+                } catch (Exception e) {
+                    echo 'No test results found, skipping JUnit report.'
+                }
+            }
         }
     }
 }
