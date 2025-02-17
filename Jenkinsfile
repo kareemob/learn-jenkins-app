@@ -98,10 +98,6 @@ pipeline {
 
         stage('Prod-E2E') {
 
-            environment{
-                CI_ENVIRONMENT_URL = 'https://velvety-kashata-a64c56.netlify.app'
-            }
-
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -109,11 +105,12 @@ pipeline {
                 }
             }
 
+            environment{
+                CI_ENVIRONMENT_URL = 'https://velvety-kashata-a64c56.netlify.app'
+            }
             steps {
                 sh '''
-                    
                     npx playwright test --reporter=html
-                    pkill -f serve
                 '''
             }
 
